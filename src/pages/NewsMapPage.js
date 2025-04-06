@@ -81,7 +81,7 @@ function NewsMapPage() {
     }
 
     try {
-      const res = await axios.get("http://127.0.0.1:5000/route_search", {
+      const res = await axios.get("https://news-map-wmye.onrender.com/route_search", {
         params: {
           origin: startLocation.name,
           destination: endLocation.name,
@@ -247,7 +247,7 @@ function NewsMapPage() {
     await fetchWeather(regionInput); // 🔔 검색 시 날씨도 요청
 
     try {
-      const response = await axios.get("http://127.0.0.1:5000/search_news", {
+      const response = await axios.get("https://news-map-wmye.onrender.com/search_news", {
         params: { region: regionInput, category: categoryInput },
       });
 
