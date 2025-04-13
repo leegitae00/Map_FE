@@ -357,7 +357,7 @@ function NewsMapPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
-      <h1>🗺️ 지역 뉴스 MAP</h1>
+      <h1 style={{ color: "white" }}>🗺️ 지역 뉴스 MAP</h1>
 
       <div style={{ display: "flex", gap: "20px", marginBottom: "30px" }}>
         <div style={{ flex: 2, display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -445,7 +445,7 @@ function NewsMapPage() {
 
         {/* 오른쪽 사이드바 전체 */}
         <div style={{ flex: 1, maxHeight: "950px", overflowY: "auto", paddingRight: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <h2>📰 '{regionInput}의 {categoryInput}'에 대해서 찾고 계신가요?</h2>
+          <h2 style={{ color: "white" }}>📰 '{regionInput}의 {categoryInput}'에 대해서 찾고 계신가요?</h2>
 
           {/* 뉴스 리스트만 스크롤 가능하도록 분리 */}
           <div style={{ overflowY: "auto", flexGrow: 1 }}>
