@@ -1,38 +1,75 @@
-// WeatherWidget.jsx 또는 WeatherWidget.js
-
 import { useEffect, useState } from "react";
+import axios from "axios";
+
+const KAKAO_REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
+const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
 export default function WeatherWidget({ region }) {
     const [weather, setWeather] = useState(null);
     const [forecast, setForecast] = useState([]);
 
-    const API_KEY = "1197f4b03945bcab7633e933abaf49b3";
 
     useEffect(() => {
         if (!region?.trim()) return;
 
         const fetchWeather = async () => {
             try {
-                const weatherRes = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?q=${region}&appid=${API_KEY}&units=metric&lang=kr`
+                // 🔁 Step 1: 카카오로 위도/경도 가져오기
+                const kakaoRes = await axios.get(
+                    "https://dapi.kakao.com/v2/local/search/keyword.json",
+                    {
+                        headers: { Authorization: `KakaoAK ${KAKAO_REST_API_KEY}` },
+                        params: { query: region },
+                    }
                 );
-                const weatherData = await weatherRes.json();
 
-                if (weatherData.cod === 200) {
-                    setWeather({
-                        temp: Math.round(weatherData.main.temp),
-                        description: weatherData.weather[0].description,
-                        name: weatherData.name,
-                        icon: weatherData.weather[0].icon,
-                    });
-                } else {
+                const docs = kakaoRes.data.documents;
+                if (!docs || docs.length === 0) {
+                    console.warn("좌표 검색 실패:", region);
                     setWeather(null);
+                    return;
                 }
 
-                const forecastRes = await fetch(
-                    `https://api.openweathermap.org/data/2.5/forecast?q=${region}&appid=${API_KEY}&units=metric&lang=kr`
+                const { x: lng, y: lat } = docs[0];
+
+                // 🌦 Step 2: 위도/경도로 현재 날씨 요청
+                const weatherRes = await axios.get(
+                    `https://api.openweathermap.org/data/2.5/weather`,
+                    {
+                        params: {
+                            lat,
+                            lon: lng,
+                            appid: WEATHER_API_KEY,
+                            units: "metric",
+                            lang: "kr",
+                        },
+                    }
                 );
-                const forecastData = await forecastRes.json();
+
+                const weatherData = weatherRes.data;
+
+                setWeather({
+                    temp: Math.round(weatherData.main.temp),
+                    description: weatherData.weather[0].description,
+                    name: weatherData.name,
+                    icon: weatherData.weather[0].icon,
+                });
+
+                // 🔮 Step 3: 위도/경도로 3시간 예보 요청
+                const forecastRes = await axios.get(
+                    `https://api.openweathermap.org/data/2.5/forecast`,
+                    {
+                        params: {
+                            lat,
+                            lon: lng,
+                            appid: WEATHER_API_KEY,
+                            units: "metric",
+                            lang: "kr",
+                        },
+                    }
+                );
+
+                const forecastData = forecastRes.data;
 
                 if (forecastData.cod === "200") {
                     const next5 = forecastData.list.slice(0, 5).map((item) => ({
@@ -53,66 +90,25 @@ export default function WeatherWidget({ region }) {
     }, [region]);
 
     return (
-        <div
-            style={{
-                width: "100%",
-                backgroundColor: "black",
-                color: "white",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                borderRadius: "20px",
-                fontSize: "18px",
-                padding: "20px",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                border: "2px solid white",
-            }}
-        >
+        <div style={{ width: "100%", backgroundColor: "black", color: "white", padding: "20px", borderRadius: "20px" }}>
             {weather ? (
                 <>
-                    <p style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "4px" }}>
-                        {weather.name}
-                    </p>
-                    <img
-                        src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-                        alt="현재 날씨 아이콘"
-                        style={{ width: "80px", height: "80px" }}
-                    />
-                    <p style={{ fontSize: "40px", fontWeight: "bold" }}>{weather.temp}°C</p>
-                    <p style={{ fontSize: "20px", marginBottom: "16px" }}>{weather.description}</p>
-
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            width: "100%",
-                            borderTop: "1px solid #eee",
-                            paddingTop: "10px",
-                        }}
-                    >
-                        {forecast.map((item, index) => (
-                            <div
-                                key={index}
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    flex: 1,
-                                }}
-                            >
-                                <p style={{ fontSize: "14px", color: "#ccc" }}>{item.time}</p>
-                                <img
-                                    src={`http://openweathermap.org/img/wn/${item.icon}.png`}
-                                    alt="예보 아이콘"
-                                    style={{ width: "40px", height: "40px" }}
-                                />
-                                <p style={{ fontSize: "16px" }}>{item.temp}°</p>
+                    <p style={{ fontSize: "24px", fontWeight: "bold" }}>{weather.name}</p>
+                    <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt="날씨" />
+                    <p style={{ fontSize: "40px" }}>{weather.temp}°C</p>
+                    <p>{weather.description}</p>
+                    <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                        {forecast.map((item, idx) => (
+                            <div key={idx} style={{ textAlign: "center" }}>
+                                <p>{item.time}</p>
+                                <img src={`http://openweathermap.org/img/wn/${item.icon}.png`} alt="예보" />
+                                <p>{item.temp}°</p>
                             </div>
                         ))}
                     </div>
                 </>
             ) : region ? (
-                <p style={{ color: "#888", padding: "10px" }}>날씨 정보를 불러올 수 없습니다.</p>
+                <p>날씨 정보를 불러올 수 없습니다.</p>
             ) : null}
         </div>
     );
