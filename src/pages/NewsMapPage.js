@@ -444,49 +444,49 @@ function NewsMapPage() {
 
         {/* 오른쪽 사이드바 전체 */}
         <div style={{ flex: 1, maxHeight: "950px", overflowY: "auto", paddingRight: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <h2 style={{ color: "white" }}>📰 '{regionInput}의 {categoryInput}'에 대해서 찾고 계신가요?</h2>
 
-          {/* 뉴스 리스트만 스크롤 가능하도록 분리 */}
-          <div
-            style={{
-              overflowY: "auto",
-              flexGrow: 1,
-              backgroundColor: "white",
-              borderRadius: "12px",
-              padding: "16px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-            }}
-          >
-            {newsList.length === 0 ? (
-              <p>지역과 카테고리를 입력 후 검색해 주세요.</p>
-            ) : (
-              <ul style={{ listStyleType: "none", padding: 0 }}>
+          {/* ✅ 흰색 박스: 헤드라인 + 뉴스 리스트 */}
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "12px",
+            padding: "20px",
+            height: "600px",                     // 지도와 동일한 높이
+            overflowY: "auto",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+          }}>
+            <h2 style={{ color: "black", marginTop: 0 }}>📰 '{regionInput}의 {categoryInput}'에 대해서 찾고 계신가요?</h2>
 
-                {newsList.map((article, index) => (
-                  <li
-                    key={index}
-                    ref={(el) => (articleRefs.current[index] = el)}
-                    style={{
-                      marginBottom: "15px",
-                      borderBottom: "1px solid #ddd",
-                      paddingBottom: "10px",
-                      backgroundColor: selectedArticleIndex === index ? "#f0f8ff" : "transparent",
-                      transition: "background-color 0.3s",
-                    }}
-                  >
-                    <a
-                      href={article.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "#0078FF" }}
+            <div style={{ overflowY: "auto" }}>
+              {newsList.length === 0 ? (
+                <p>지역과 카테고리를 입력 후 검색해 주세요.</p>
+              ) : (
+                <ul style={{ listStyleType: "none", padding: 0 }}>
+                  {newsList.map((article, index) => (
+                    <li
+                      key={index}
+                      ref={(el) => (articleRefs.current[index] = el)}
+                      style={{
+                        marginBottom: "15px",
+                        borderBottom: "1px solid #ddd",
+                        paddingBottom: "10px",
+                        backgroundColor: selectedArticleIndex === index ? "#f0f8ff" : "transparent",
+                        transition: "background-color 0.3s",
+                      }}
                     >
-                      <h4>{decodeHtmlEntities(article.title)}</h4>
-                    </a>
-                    <p>{decodeHtmlEntities(article.description || "요약문을 가져올 수 없습니다.")}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
+                      <a
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none", color: "#0078FF" }}
+                      >
+                        <h4>{decodeHtmlEntities(article.title)}</h4>
+                      </a>
+                      <p>{decodeHtmlEntities(article.description || "요약문을 가져올 수 없습니다.")}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
 
           {/* 날씨 위젯: 뉴스 리스트 바깥으로 분리된 카드 */}
