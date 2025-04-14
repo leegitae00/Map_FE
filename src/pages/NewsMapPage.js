@@ -447,11 +447,21 @@ function NewsMapPage() {
           <h2 style={{ color: "white" }}>📰 '{regionInput}의 {categoryInput}'에 대해서 찾고 계신가요?</h2>
 
           {/* 뉴스 리스트만 스크롤 가능하도록 분리 */}
-          <div style={{ overflowY: "auto", flexGrow: 1 }}>
+          <div
+            style={{
+              overflowY: "auto",
+              flexGrow: 1,
+              backgroundColor: "white",
+              borderRadius: "12px",
+              padding: "16px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            }}
+          >
             {newsList.length === 0 ? (
               <p>지역과 카테고리를 입력 후 검색해 주세요.</p>
             ) : (
               <ul style={{ listStyleType: "none", padding: 0 }}>
+
                 {newsList.map((article, index) => (
                   <li
                     key={index}
