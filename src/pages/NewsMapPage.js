@@ -357,7 +357,6 @@ function NewsMapPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
-      <h1 style={{ color: "white" }}>🗺️ 지역 뉴스 MAP</h1>
 
       <div style={{ display: "flex", gap: "20px", marginBottom: "30px" }}>
         <div style={{ flex: 2, display: "flex", flexDirection: "column", gap: "10px" }}>
