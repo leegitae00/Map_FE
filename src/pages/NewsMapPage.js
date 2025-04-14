@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import WeatherWidget from "./WeatherWidget";
 
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 const TOMORROW_API_KEY = process.env.REACT_APP_TOMORROW_API_KEY;
@@ -490,30 +491,7 @@ function NewsMapPage() {
           </div>
 
           {/* 날씨 위젯: 뉴스 리스트 바깥으로 분리된 카드 */}
-          {weather && (
-            <div style={{
-              marginTop: "10px",
-              padding: "15px",
-              border: "1px solid #ccc",
-              borderRadius: "10px",
-              backgroundColor: "#eef6ff",
-              lineHeight: "1.6",
-              fontSize: "14px"
-            }}>
-              <h3>🌤 {regionInput} 현재 날씨</h3>
-              <p>{getWeatherIcon(weather.weatherCode)} {getWeatherDescription(weather.weatherCode)}</p>
-              <p>🌡 온도: {weather.temp} °C</p>
-              <p>💧 습도: {weather.humidity}%</p>
-              <p>🌧 강수 확률: {weather.precipitationProbability}%</p>
-              <p>
-                🌫 미세먼지 (PM2.5): <strong style={{
-                  color: getPm25Grade(weather.pm25).color
-                }}>
-                  {weather.pm25} µg/m³ ({getPm25Grade(weather.pm25).label})
-                </strong>
-              </p>
-            </div>
-          )}
+          <WeatherWidget region={regionInput} />
         </div>
       </div>
     </div>
