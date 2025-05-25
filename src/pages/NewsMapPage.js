@@ -294,14 +294,14 @@ function NewsMapPage() {
         </div>
 
         {/* 오른쪽 사이드바 전체 */}
-        <div style={{ flex: 1, maxHeight: "950px", overflowY: "auto", paddingRight: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ flex: 1, overflowY: "auto", height: "100%" }}>
 
           {/* ✅ 흰색 박스: 헤드라인 + 뉴스 리스트 */}
           <div style={{
             backgroundColor: "white",
             borderRadius: "12px",
             padding: "20px",
-            height: "3500px",                     // 지도와 동일한 높이
+            height: "1200px",                     // 지도와 동일한 높이
             overflowY: "auto",
             boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
           }}>
