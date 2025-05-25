@@ -90,7 +90,7 @@ export default function WeatherWidget({ region }) {
     }, [region]);
 
     return (
-        <div style={{ width: "100%", backgroundColor: "#ADD8E6", color: "white", padding: "20px", borderRadius: "20px" }}>
+        <div style={{ width: "100%", backgroundColor: "#ADD8E6", color: "white", padding: "10px", borderRadius: "12px" }}>
             {weather ? (
                 <>
                     <p style={{ fontSize: "24px", fontWeight: "bold" }}>{weather.name}</p>
