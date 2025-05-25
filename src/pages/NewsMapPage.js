@@ -288,7 +288,19 @@ function NewsMapPage() {
 
           {/* 지도 */}
           <div id="map" style={{ width: "100%", height: "600px", borderRadius: "8px" }}></div>
-          {/* 기존 위치 삭제하고 아래 위치로 이동 */}
+          {/* 날씨 위젯: 기존 길찾기 영역 대체 */}
+          <div style={{
+            marginTop: "20px",
+            padding: "18px",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            background: "#f9f9f9",
+            width: "98%",
+            alignSelf: "flex-start"
+          }}>
+            <h3>🌤️ 현재 날씨 정보</h3>
+            <WeatherWidget region={regionInput} />
+          </div>
 
         </div>
 
@@ -340,7 +352,8 @@ function NewsMapPage() {
           </div>
 
           {/* 날씨 위젯: 뉴스 리스트 바깥으로 분리된 카드 */}
-          <WeatherWidget region={regionInput} />
+
+
         </div>
       </div>
     </div>
