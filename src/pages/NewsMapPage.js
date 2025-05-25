@@ -227,7 +227,7 @@ function NewsMapPage() {
             if (infoWindow.getMap()) {
               infoWindow.close();
               setOpenedInfoWindow(null);
-              setSelectedArticleIndex(null);
+              // setSelectedArticleIndex(null);
             } else {
               if (openedInfoWindow) openedInfoWindow.close();
               infoWindow.open(map, marker);
