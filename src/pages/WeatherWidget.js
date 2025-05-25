@@ -90,12 +90,12 @@ export default function WeatherWidget({ region }) {
     }, [region]);
 
     return (
-        <div style={{ width: "100%", backgroundColor: "#ADD8E6", color: "white", padding: "10px", borderRadius: "12px" }}>
+        <div style={{ width: "100%", backgroundColor: "#ffffff", color: "#000000", padding: "20px", borderRadius: "12px" }}>
             {weather ? (
                 <>
-                    <p style={{ fontSize: "24px", fontWeight: "bold" }}>{weather.name}</p>
+                    <p style={{ fontSize: "18px", fontWeight: "bold" }}>{weather.name}</p>
                     <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt="날씨" />
-                    <p style={{ fontSize: "40px" }}>{weather.temp}°C</p>
+                    <p style={{ fontSize: "32px" }}>{weather.temp}°C</p>
                     <p>{weather.description}</p>
                     <div style={{ display: "flex", justifyContent: "space-around", marginTop: "4px" }}>
                         {forecast.map((item, idx) => (
