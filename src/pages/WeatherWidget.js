@@ -97,7 +97,7 @@ export default function WeatherWidget({ region }) {
                     <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt="날씨" />
                     <p style={{ fontSize: "40px" }}>{weather.temp}°C</p>
                     <p>{weather.description}</p>
-                    <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-around", marginTop: "4px" }}>
                         {forecast.map((item, idx) => (
                             <div key={idx} style={{ textAlign: "center" }}>
                                 <p>{item.time}</p>
