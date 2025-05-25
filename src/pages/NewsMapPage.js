@@ -17,7 +17,7 @@ function NewsMapPage() {
   const [categoryInput, setCategoryInput] = useState("");
   const [newsMarkers, setNewsMarkers] = useState([]);
   const [newsList, setNewsList] = useState([]);
-  const [selectedArticleIndex, setSelectedArticleIndex] = useState(null);
+  // const [selectedArticleIndex, setSelectedArticleIndex] = useState(null);
   const [openedInfoWindow, setOpenedInfoWindow] = useState(null);
   const [weather, setWeather] = useState(null);
   const mapRef = useRef(null);
@@ -232,9 +232,9 @@ function NewsMapPage() {
               if (openedInfoWindow) openedInfoWindow.close();
               infoWindow.open(map, marker);
               setOpenedInfoWindow(infoWindow);
-              setSelectedArticleIndex(index);
-              const el = articleRefs.current[index];
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              // setSelectedArticleIndex(index);
+              // const el = articleRefs.current[index];
+              // if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
             }
           });
 
@@ -320,7 +320,7 @@ function NewsMapPage() {
                         marginBottom: "15px",
                         borderBottom: "1px solid #ddd",
                         paddingBottom: "10px",
-                        backgroundColor: selectedArticleIndex === index ? "#f0f8ff" : "transparent",
+                        // backgroundColor: selectedArticleIndex === index ? "#f0f8ff" : "transparent",
                         transition: "background-color 0.3s",
                       }}
                     >
