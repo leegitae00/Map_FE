@@ -20,11 +20,7 @@ function NewsMapPage() {
   const [selectedArticleIndex, setSelectedArticleIndex] = useState(null);
   const [openedInfoWindow, setOpenedInfoWindow] = useState(null);
   const [weather, setWeather] = useState(null);
-  const [startLocation, setStartLocation] = useState(null);
-  const [endLocation, setEndLocation] = useState(null);
-  const [routeInfo, setRouteInfo] = useState(null);
   const mapRef = useRef(null);
-  const routeLineRef = useRef(null);
 
   const articleRefs = useRef([]);
   const markerIcons = [
@@ -75,55 +71,6 @@ function NewsMapPage() {
     }
   };
 
-  const fetchTransitRoute = async () => {
-    if (!startLocation || !endLocation) {
-      alert("출발지와 도착지를 모두 설정해주세요.");
-      return;
-    }
-
-    try {
-      const res = await axios.get("https://news-map-wmye.onrender.com/route_search", {
-        params: {
-          origin: startLocation.name,
-          destination: endLocation.name,
-        },
-      });
-
-      const route = res.data.routes[0];
-      const leg = route.legs[0];
-
-      const path = [];
-      leg.steps.forEach((step) => {
-        if (step.path) {
-          step.path.forEach(([lat, lng]) => {
-            path.push(new window.naver.maps.LatLng(lat, lng));
-          });
-        }
-      });
-
-      if (routeLineRef.current) {
-        routeLineRef.current.setMap(null);
-      }
-
-      const polyline = new window.naver.maps.Polyline({
-        map: mapRef.current,
-        path,
-        strokeColor: "#0078FF",
-        strokeWeight: 5,
-      });
-
-      routeLineRef.current = polyline;
-      setRouteInfo({
-        summary: route.summary,
-        steps: leg.steps,
-      });
-    } catch (error) {
-      console.error("대중교통 경로 API 실패:", error);
-      alert("대중교통 경로를 불러오지 못했습니다.");
-    }
-  };
-
-
   // 날씨 코드 → 한글 해석
   const getWeatherDescription = (code) => {
     const mapping = {
@@ -159,50 +106,6 @@ function NewsMapPage() {
     if (pm25 <= 15) return { label: "좋음", color: "green" };
     if (pm25 <= 35) return { label: "보통", color: "orange" };
     return { label: "나쁨", color: "red" };
-  };
-
-  const drawRoute = async () => {
-    if (!startLocation || !endLocation) {
-      alert("출발지와 도착지를 모두 설정해주세요.");
-      return;
-    }
-
-    try {
-      const response = await axios.get("https://apis-navi.kakaomobility.com/v1/directions", {
-        headers: {
-          Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
-        },
-        params: {
-          origin: `${startLocation.lng},${startLocation.lat}`,
-          destination: `${endLocation.lng},${endLocation.lat}`,
-        },
-      });
-
-      const route = response.data.routes[0];
-      const path = [];
-      route.sections[0].roads.forEach(road => {
-        for (let i = 0; i < road.vertexes.length; i += 2) {
-          path.push(new window.naver.maps.LatLng(road.vertexes[i + 1], road.vertexes[i]));
-        }
-      });
-
-      if (routeLineRef.current) {
-        routeLineRef.current.setMap(null);
-      }
-
-      const polyline = new window.naver.maps.Polyline({
-        map: mapRef.current,
-        path,
-        strokeColor: '#0078FF',
-        strokeWeight: 5,
-      });
-
-      routeLineRef.current = polyline;
-      setRouteInfo(route);
-    } catch (error) {
-      console.error("길찾기 API 오류:", error);
-      alert("경로를 불러오는 데 실패했습니다.");
-    }
   };
 
 
@@ -295,9 +198,6 @@ function NewsMapPage() {
             },
           });
 
-          window.setStartLocation = (loc) => setStartLocation(loc);
-          window.setEndLocation = (loc) => setEndLocation(loc);
-
           const videoIframe = await fetchVideoForArticle(article, location);
 
           const infoWindow = new window.naver.maps.InfoWindow({
@@ -309,13 +209,7 @@ function NewsMapPage() {
                     📍 <strong>장소: ${location.name}</strong>
                   </p>
                   <p style="font-size: 14px;">${decodeHtmlEntities(article.description)}</p>
-                  <a href="${article.link}" target="_blank" rel="noopener noreferrer" style="color:#0078FF;">🔗 NEWS LINK</a>              
-                  
-                  <!-- 버튼을 새로운 div로 감싸서 아래로 이동 -->
-                  <div style="margin-top: 10px; display: flex; gap: 8px;">
-                    <button onclick='window.setStartLocation(${JSON.stringify(location)})'>🚩 출발지</button>
-                    <button onclick='window.setEndLocation(${JSON.stringify(location)})'>🏁 도착지</button>
-                  </div>
+                  <a href="${article.link}" target="_blank" rel="noopener noreferrer" style="color:#0078FF;">🔗 NEWS LINK</a>           
                 </div>
                 <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
                   <div style="display:inline-block; background-color:#f0f0f0; color:#333; font-size:13px; padding:4px 8px; border-radius:12px; margin-bottom:8px; display:flex; align-items:center; gap:6px; margin-top:auto;">
@@ -395,51 +289,6 @@ function NewsMapPage() {
           {/* 지도 */}
           <div id="map" style={{ width: "100%", height: "600px", borderRadius: "8px" }}></div>
           {/* 기존 위치 삭제하고 아래 위치로 이동 */}
-          <div style={{
-            marginTop: "20px",
-            padding: "18px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            background: "#f9f9f9",
-            width: "98%",
-            alignSelf: "flex-start"
-          }}>
-            <h3>🚗 길찾기</h3>
-            <p>출발지: {startLocation?.name || "(미설정)"}</p>
-            <p>도착지: {endLocation?.name || "(미설정)"}</p>
-            <button onClick={fetchTransitRoute} style={{
-              padding: "8px 16px",
-              backgroundColor: "#0078FF",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer"
-            }}>경로 보기</button>
-
-            {routeInfo && routeInfo.steps && (
-              <div style={{ marginTop: "10px" }}>
-                <h4>📄 경로 상세</h4>
-                <p>예상 거리: {(routeInfo.summary.distance / 1000).toFixed(2)} km</p>
-                <p>예상 시간: {(routeInfo.summary.duration / 60).toFixed(0)} 분</p>
-                <ul style={{ listStyleType: "none", padding: 0, marginTop: "10px" }}>
-                  {routeInfo.steps.map((step, idx) => (
-                    <li key={idx} style={{ marginBottom: "6px" }}>
-                      {step.type === "WALK" ? (
-                        <span>🚶 도보 {step.distance}m</span>
-                      ) : step.type === "SUBWAY" ? (
-                        <span>🚇 {step.line_name} 승차 → {step.station_name}</span>
-                      ) : step.type === "BUS" ? (
-                        <span>🚌 {step.line_name} 버스 탑승 → {step.station_name}</span>
-                      ) : (
-                        <span>➡️ {step.description || "이동"}</span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-          </div>
 
         </div>
 
