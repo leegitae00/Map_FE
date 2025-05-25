@@ -301,7 +301,7 @@ function NewsMapPage() {
             backgroundColor: "white",
             borderRadius: "12px",
             padding: "20px",
-            height: "1200px",                     // 지도와 동일한 높이
+            height: "1150px",                     // 지도와 동일한 높이
             overflowY: "auto",
             boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
           }}>
